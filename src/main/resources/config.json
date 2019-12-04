@@ -1,0 +1,14 @@
+{
+  "server": {
+    "port": 8080,
+    "maxConnections": 50
+  },
+  "mysql": {
+    "hostname": "localhost",
+    "port": "3306",
+    "database": "MyCompany",
+    "username": "MyCompanyUser",
+    "password": "SpecPassword"
+  }
+
+}
