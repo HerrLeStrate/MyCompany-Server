@@ -16,4 +16,7 @@ dependencies {
     compile 'org.json:json:20171018'
     // https://mvnrepository.com/artifact/mysql/mysql-connector-java
     compile group: 'mysql', name: 'mysql-connector-java', version: '8.0.18'
+    // https://mvnrepository.com/artifact/commons-codec/commons-codec
+    compile group: 'commons-codec', name: 'commons-codec', version: '1.13'
+
 }
