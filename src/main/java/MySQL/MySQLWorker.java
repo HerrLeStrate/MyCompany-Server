@@ -24,6 +24,7 @@ public class MySQLWorker {
       this.TryToCreateTableData();
       this.TryToCreateTableNotification();
       this.TryToCreateTableUpdated();
+      this.TryToCreateTableNews();
    }
 
     private void Connect() {
@@ -51,6 +52,21 @@ public class MySQLWorker {
       } catch (SQLException | ClassNotFoundException ex) {
           ex.printStackTrace();
       }
+   }
+
+   private void TryToCreateTableNews() {
+       try {
+           mysql.updateSQL("CREATE TABLE IF NOT EXISTS" +
+                   " news" +
+                   " (`id` INT NOT NULL AUTO_INCREMENT," +
+                   " `author` INT NOT NULL," +
+                   " `news` LONGTEXT NOT NULL," +
+                   " `time` DATETIME NOT NULL," +
+                   " PRIMARY KEY(`id`)" +
+                   ");");
+       } catch (SQLException | ClassNotFoundException ex) {
+           ex.printStackTrace();
+       }
    }
 
     private void TryToCreateTableData() {
@@ -96,6 +112,22 @@ public class MySQLWorker {
        if(!mysql.checkConnection()) {
            mysql.openConnection();
        }
+   }
+
+   public ResultSet getNews() {
+       try {
+           checkConnection();
+
+           String query = "SELECT * FROM news ORDER BY id DESC;";
+
+           PreparedStatement ps = mysql.connection.prepareStatement(query);
+
+           return ps.executeQuery();
+
+       } catch (SQLException | ClassNotFoundException ex){
+           ex.printStackTrace();
+       }
+       return null;
    }
 
    public String getLastQuery(String clientId){
@@ -257,6 +289,59 @@ public class MySQLWorker {
            ex.printStackTrace();
            return null;
        }
+   }
+
+   public String getLoginBySession(String session){
+       try {
+           checkConnection();
+
+           String query = "SELECT login from users where `session` = ?";
+
+           PreparedStatement ps = mysql.connection.prepareStatement(query);
+           ps.setString(1, session);
+
+           ResultSet rs = ps.executeQuery();
+
+           if(rs == null || !rs.next())
+               return "none";
+
+           return rs.getString("login");
+       } catch (SQLException | ClassNotFoundException ex){
+           ex.printStackTrace();
+       }
+
+       return "none";
+   }
+
+   public void setSession(String login, String session){
+       try {
+           checkConnection();
+
+           String query = "UPDATE users SET `session` = ? WHERE `login` = ?";
+
+           PreparedStatement ps = mysql.connection.prepareStatement(query);
+           ps.setString(1, session);
+           ps.setString(2, login);
+
+           ps.execute();
+       } catch (SQLException | ClassNotFoundException ex){
+           ex.printStackTrace();
+       }
+   }
+
+   public ResultSet getUsers(){
+       try {
+            checkConnection();
+
+            String query = "SELECT * FROM users;";
+
+            PreparedStatement ps = mysql.connection.prepareStatement(query);
+
+            return ps.executeQuery();
+       } catch (SQLException | ClassNotFoundException ex){
+           ex.printStackTrace();
+       }
+       return null;
    }
 
 
